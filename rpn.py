@@ -23,6 +23,11 @@ def calculate(arg):
                     stack.pop()
                     stack.pop()
                     stack.append(result)
+                elif op == '-' and len(stack) > 1:
+                    result = stack[-1] - stack[-2]
+                    stack.pop()
+                    stack.pop()
+                    stack.append(result)
 
     return stack[0]
                 
