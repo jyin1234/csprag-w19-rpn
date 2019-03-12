@@ -6,6 +6,7 @@ install:
   - pip install coverage
   - pip install coverage-badge
   - pip install click
+  - pip install termcolor
 
 script:
   - coverage run -m unittest
