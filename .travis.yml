@@ -5,8 +5,8 @@ python:
 install:
   - pip install coverage
   - pip install coverage-badge
+  - pip install click
 
 script:
   - coverage run -m unittest
   - coverage report
-  - coverage-badge
