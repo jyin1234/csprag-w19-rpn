@@ -1,40 +1,44 @@
 #!/usr/bin/env python3
 
-def isInt(string):
+import click
+import operator
+import readline
+from termcolor import colored
+
+
+operators = {
+    '+': operator.add,
+    '-': operator.sub,
+    '*': operator.mul,
+    '/': operator.truediv,
+    '^': operator.pow,
+}
+
+def calculate(myarg, verbose):
+    stack = list()
+    for token in myarg.split():
         try:
-            int(string)
-            return True
+            token = int(token)
+            stack.append(token)
         except ValueError:
-            return False
+            function = operators[token]
+            arg2 = stack.pop()
+            arg1 = stack.pop()
+            print(colored(arg1, "green") + colored(token, "red") + colored(arg2, "green"))
+            result = function(arg1, arg2)
+            stack.append(result)
+        if verbose:
+            print(stack)
+    if len(stack) != 1:
+        raise TypeError("Too many parameters")
+    return stack.pop()
 
-def calculate(arg):
-    stack = []
-    for op in arg.split(" "):
-            if isInt(op):
-                stack.append(int(op))
-            else:
-                if op == '+' and len(stack) > 1:
-                    result = stack[-1] + stack[-2]
-                    stack.pop()
-                    stack.pop()
-                    stack.append(result)
-                elif op == '^' and len(stack) > 1:
-                    result = stack[-1] ** stack[-2]
-                    stack.pop()
-                    stack.pop()
-                    stack.append(result)
-                elif op == '-' and len(stack) > 1:
-                    result = stack[-1] - stack[-2]
-                    stack.pop()
-                    stack.pop()
-                    stack.append(result)
-
-    return stack[0]
-                
-
-def main():
+@click.command()
+@click.option('-v', '--verbose', is_flag=True)
+def main(verbose):
     while True:
-        print(calculate(input("rpn calc> ")))
+        result = calculate(input("rpn calc> "), verbose)
+        print(colored("Result: {}".format(result), "blue"))
 
 if __name__ == '__main__':
     main()
